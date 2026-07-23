@@ -46,9 +46,13 @@ public class NatsContainerIntegrationTests
             container = new NatsBuilder("nats:2.10").Build();
             await container.StartAsync();
         }
-        catch (Exception ex) // TEMP: always catch so Diagnostics_TEMP can report the reason.
+        catch (Exception ex) when (!IsContinuousIntegration)
         {
-            skipReason = $"{ex.GetType().Name}: {ex.Message}";
+            // On a dev machine without a Docker daemon, skip rather than fail the suite. In CI the
+            // exception is NOT caught here: it propagates out of ClassInitialize and fails the class,
+            // so a container that cannot start is a loud failure (with the reason) rather than a
+            // silent pass (MTP reports Assert.Inconclusive as passed).
+            skipReason = $"NATS container could not be started (Docker required): {ex.Message}";
             container = null;
         }
     }
@@ -61,15 +65,6 @@ public class NatsContainerIntegrationTests
             await container.DisposeAsync();
         }
     }
-
-    [TestMethod]
-    public void Diagnostics_TEMP() => Assert.Fail(
-        $"IsCI={IsContinuousIntegration} " +
-        $"CI='{Environment.GetEnvironmentVariable("CI")}' " +
-        $"GITHUB_ACTIONS='{Environment.GetEnvironmentVariable("GITHUB_ACTIONS")}' " +
-        $"DOCKER_HOST='{Environment.GetEnvironmentVariable("DOCKER_HOST")}' " +
-        $"container={(container is null ? "NULL" : container.GetConnectionString())} " +
-        $"skipReason='{skipReason}'");
 
     [TestMethod]
     public async Task AllSevenMessageTypesRoundTripOverNatsViaTheRegistry()
