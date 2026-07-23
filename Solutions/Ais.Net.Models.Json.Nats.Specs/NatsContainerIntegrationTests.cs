@@ -33,6 +33,11 @@ public class NatsContainerIntegrationTests
     private static NatsContainer? container;
     private static string? skipReason;
 
+    // GitHub Actions (and most CI systems) set CI=true. In CI the container must start; on a dev
+    // machine without Docker the tests skip instead.
+    private static bool IsContinuousIntegration =>
+        string.Equals(Environment.GetEnvironmentVariable("CI"), "true", StringComparison.OrdinalIgnoreCase);
+
     [ClassInitialize]
     public static async Task ClassInitialize(TestContext context)
     {
@@ -40,14 +45,15 @@ public class NatsContainerIntegrationTests
         {
             container = new NatsBuilder("nats:2.10").Build();
             await container.StartAsync();
-            Console.WriteLine($"[NATS-IT] container started at {container.GetConnectionString()}");
         }
-        catch (Exception ex)
+        catch (Exception ex) when (!IsContinuousIntegration)
         {
-            // No Docker daemon (or it is unreachable): skip rather than fail the suite.
+            // On a dev machine without a Docker daemon, skip rather than fail the suite. In CI the
+            // exception is NOT caught here: it propagates out of ClassInitialize and fails the class,
+            // so a container that cannot start is a loud failure (with the reason) rather than a
+            // silent pass (MTP reports Assert.Inconclusive as passed).
             skipReason = $"NATS container could not be started (Docker required): {ex.Message}";
             container = null;
-            Console.WriteLine($"[NATS-IT] container SKIPPED: {ex.GetType().Name}: {ex.Message}");
         }
     }
 
