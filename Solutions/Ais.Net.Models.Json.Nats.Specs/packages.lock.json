@@ -215,7 +215,7 @@
         "type": "CentralTransitive",
         "requested": "[1.0.0, )",
         "resolved": "1.0.0",
-        "contentHash": "Gkt804TZWo8iW+E1HsnBKb/9qaAvnkYy7OjLDjTys7DptSuZuNsM2YjBTVSwPNI14rlkFD243i/pRf5QGPaP4A==",
+        "contentHash": "YtQl8HMBR9eFh8CXqdMm+7yxL/LvfVPvSB4OeS5voF1q0N51kQUIN2ZI1Bm/mjmAmBVPGv/UHNAHSrWfDvxZ+Q==",
         "dependencies": {
           "Ais.Net.Models": "1.0.1"
         }
