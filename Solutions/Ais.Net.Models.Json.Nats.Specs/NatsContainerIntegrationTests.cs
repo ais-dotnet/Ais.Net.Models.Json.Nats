@@ -40,12 +40,14 @@ public class NatsContainerIntegrationTests
         {
             container = new NatsBuilder("nats:2.10").Build();
             await container.StartAsync();
+            Console.WriteLine($"[NATS-IT] container started at {container.GetConnectionString()}");
         }
         catch (Exception ex)
         {
             // No Docker daemon (or it is unreachable): skip rather than fail the suite.
             skipReason = $"NATS container could not be started (Docker required): {ex.Message}";
             container = null;
+            Console.WriteLine($"[NATS-IT] container SKIPPED: {ex.GetType().Name}: {ex.Message}");
         }
     }
 
