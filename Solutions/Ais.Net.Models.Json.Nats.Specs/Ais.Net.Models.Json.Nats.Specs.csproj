@@ -18,6 +18,9 @@
   <ItemGroup>
     <PackageReference Include="NSubstitute" />
     <PackageReference Include="Shouldly" />
+    <!-- Integration test: real NATS server in a container, and the NATS client to talk to it. -->
+    <PackageReference Include="Testcontainers.Nats" />
+    <PackageReference Include="NATS.Client.Core" />
   </ItemGroup>
 
   <ItemGroup>

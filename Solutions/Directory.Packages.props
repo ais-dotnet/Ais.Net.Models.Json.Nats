@@ -12,6 +12,7 @@
   <ItemGroup Label="Ais.Net.Models.Json.Nats.Specs">
     <PackageVersion Include="NSubstitute" Version="6.0.0" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />
+    <PackageVersion Include="Testcontainers.Nats" Version="4.13.0" />
   </ItemGroup>
 
   <ItemGroup Label="Build">
