@@ -2,6 +2,8 @@ namespace Ais.Net.Models.Json.Nats.Specs;
 
 using System;
 using System.Buffers;
+using System.Text;
+using System.Text.Json;
 
 using Ais.Net.Models;
 using Ais.Net.Models.Abstractions;
@@ -110,6 +112,65 @@ public class AisMessageNatsSerializerTests
             () => AisMessageNatsSerializerRegistry.Default.GetSerializer<string>());
         Should.Throw<NotSupportedException>(
             () => AisMessageNatsSerializerRegistry.Default.GetDeserializer<int>());
+    }
+
+    [TestMethod]
+    public void RegistryThrowsForConcreteAisSubtypes()
+    {
+        // The registry is keyed on AisMessageBase; the polymorphic serializer only exists for the
+        // base type, so requesting a concrete leaf type is not served. Publishing/subscribing must
+        // use AisMessageBase. This test locks that (deliberately sharp) contract.
+        Should.Throw<NotSupportedException>(
+            () => AisMessageNatsSerializerRegistry.Default.GetSerializer<AisMessageType18>());
+        Should.Throw<NotSupportedException>(
+            () => AisMessageNatsSerializerRegistry.Default.GetDeserializer<AisMessageType1Through3>());
+    }
+
+    [TestMethod]
+    public void DeserializeOfAnEmptyPayloadThrows()
+    {
+        // A truncated/empty NATS payload must surface as a JSON error, not a silent null.
+        ReadOnlySequence<byte> empty = new(Array.Empty<byte>());
+
+        Should.Throw<JsonException>(() => AisMessageNatsSerializer.Default.Deserialize(in empty));
+    }
+
+    [TestMethod]
+    public void DeserializeOfAMalformedPayloadThrows()
+    {
+        // Well-formed prefix, then truncated mid-object.
+        ReadOnlySequence<byte> malformed = new(Encoding.UTF8.GetBytes("{\"$type\":\"t18\",\"Mmsi\":"));
+
+        Should.Throw<JsonException>(() => AisMessageNatsSerializer.Default.Deserialize(in malformed));
+    }
+
+    [TestMethod]
+    public void DeserializeOfAMalformedMultiSegmentPayloadThrows()
+    {
+        // Same, but split across segments so the non-contiguous path is also exercised on bad input.
+        ReadOnlySequence<byte> malformed = CreateMultiSegmentSequence(
+            Encoding.UTF8.GetBytes("{\"$type\":\"t18\",\"Mmsi\":"), segmentSize: 4);
+        malformed.IsSingleSegment.ShouldBeFalse();
+
+        Should.Throw<JsonException>(() => AisMessageNatsSerializer.Default.Deserialize(in malformed));
+    }
+
+    [TestMethod]
+    public void DeserializeOfTheJsonNullLiteralReturnsNull()
+    {
+        ReadOnlySequence<byte> nullLiteral = new(Encoding.UTF8.GetBytes("null"));
+
+        AisMessageNatsSerializer.Default.Deserialize(in nullLiteral).ShouldBeNull();
+    }
+
+    [TestMethod]
+    public void DeserializeOfAnUnknownDiscriminatorThrows()
+    {
+        // The polymorphism config uses UnknownDerivedTypeHandling = FailSerialization, so an
+        // unrecognised $type tag must be rejected rather than silently mishandled.
+        ReadOnlySequence<byte> unknownTag = new(Encoding.UTF8.GetBytes("{\"$type\":\"t99\",\"Mmsi\":12345}"));
+
+        Should.Throw<JsonException>(() => AisMessageNatsSerializer.Default.Deserialize(in unknownTag));
     }
 
     private static ReadOnlySequence<byte> CreateMultiSegmentSequence(byte[] data, int segmentSize)
