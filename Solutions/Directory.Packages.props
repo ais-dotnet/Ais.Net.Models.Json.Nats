@@ -1,0 +1,21 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup Label="Ais.Net.Models.Json.Nats">
+    <PackageVersion Include="Ais.Net.Models.Json" Version="1.0.0" />
+    <PackageVersion Include="NATS.Client.Core" Version="3.0.1" />
+  </ItemGroup>
+
+  <ItemGroup Label="Ais.Net.Models.Json.Nats.Specs">
+    <PackageVersion Include="NSubstitute" Version="6.0.0" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup Label="Build">
+    <PackageVersion Include="Endjin.RecommendedPractices.GitHub" Version="2.1.18" />
+  </ItemGroup>
+
+</Project>
