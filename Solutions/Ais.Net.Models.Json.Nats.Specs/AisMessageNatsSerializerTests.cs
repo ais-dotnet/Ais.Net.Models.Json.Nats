@@ -4,6 +4,7 @@ using System;
 using System.Buffers;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 using Ais.Net.Models;
 using Ais.Net.Models.Abstractions;
@@ -12,6 +13,8 @@ using Ais.Net.Models.Json;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using NATS.Client.Core;
+
+using NSubstitute;
 
 using Shouldly;
 
@@ -74,11 +77,30 @@ public class AisMessageNatsSerializerTests
     }
 
     [TestMethod]
-    public void CombineWithReturnsTheSameSerializer()
+    public void CombineWithIgnoresTheNextSerializerAndReturnsItself()
     {
-        INatsSerializer<AisMessageBase> other = AisMessageNatsSerializer.Default;
+        // Pass a *distinct* serializer as 'next' so the assertion proves the serializer is terminal
+        // (returns itself), not merely that it echoes whatever was passed in.
+        INatsSerializer<AisMessageBase> next = Substitute.For<INatsSerializer<AisMessageBase>>();
 
-        AisMessageNatsSerializer.Default.CombineWith(other).ShouldBeSameAs(AisMessageNatsSerializer.Default);
+        AisMessageNatsSerializer.Default.CombineWith(next).ShouldBeSameAs(AisMessageNatsSerializer.Default);
+    }
+
+    [TestMethod]
+    public void ConcurrentRoundTripsAreThreadSafe()
+    {
+        // The Default instance and the underlying read-only JsonSerializerOptions are shared across
+        // all NATS publishers/subscribers, which operate concurrently. Verify the stateless design
+        // holds up under parallel use (no shared mutable state, no torn reads).
+        AisMessageBase message = Create("t18");
+
+        Parallel.For(0, 2000, _ =>
+        {
+            ArrayBufferWriter<byte> writer = new();
+            AisMessageNatsSerializer.Default.Serialize(writer, message);
+            ReadOnlySequence<byte> payload = new(writer.WrittenMemory);
+            AisMessageNatsSerializer.Default.Deserialize(in payload).ShouldBe(message);
+        });
     }
 
     [TestMethod]
