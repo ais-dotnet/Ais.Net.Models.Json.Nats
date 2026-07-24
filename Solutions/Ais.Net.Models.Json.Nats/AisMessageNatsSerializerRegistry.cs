@@ -11,16 +11,23 @@ using Ais.Net.Models;
 using NATS.Client.Core;
 
 /// <summary>
-/// An <see cref="INatsSerializerRegistry"/> that serializes <see cref="AisMessageBase"/> (and its
-/// derived message types) using <see cref="AisMessageNatsSerializer"/>. Assign it to
-/// <c>NatsOpts.SerializerRegistry</c> to make an AIS-broadcast connection use the JSON serializer by
-/// default, so callers need not pass a serializer on every publish/subscribe.
+/// An <see cref="INatsSerializerRegistry"/> that provides <see cref="AisMessageNatsSerializer"/> for
+/// <see cref="AisMessageBase"/>. Assign it to <c>NatsOpts.SerializerRegistry</c> so an AIS-broadcast
+/// connection uses the JSON serializer by default, without passing a serializer on every
+/// publish/subscribe.
 /// </summary>
 /// <remarks>
-/// This registry is intended for connections that carry only AIS messages. Requesting a serializer
-/// for any type other than <see cref="AisMessageBase"/> throws <see cref="NotSupportedException"/>;
-/// to mix AIS and non-AIS payloads on one connection, pass a per-call serializer instead of using
-/// this registry.
+/// <para>
+/// Publish and subscribe using <see cref="AisMessageBase"/> as the message type: the concrete
+/// message (<see cref="AisMessageType1Through3"/>, <see cref="AisMessageType5"/>, and so on) is
+/// written and reconstructed polymorphically from the <c>$type</c> discriminator within the payload.
+/// </para>
+/// <para>
+/// The registry serves <see cref="AisMessageBase"/> only. Requesting a serializer for any other type
+/// — including a concrete AIS leaf type such as <see cref="AisMessageType5"/> — throws
+/// <see cref="NotSupportedException"/>, because the serializer is defined solely over the base type.
+/// To mix AIS and non-AIS payloads on one connection, pass a per-call serializer instead.
+/// </para>
 /// </remarks>
 public sealed class AisMessageNatsSerializerRegistry : INatsSerializerRegistry
 {

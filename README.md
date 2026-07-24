@@ -18,15 +18,15 @@ Publish decoded AIS messages over [NATS](https://nats.io/) as UTF-8 JSON and rec
 ```csharp
 using Ais.Net.Models;
 using Ais.Net.Models.Json.Nats;
-using NATS.Net;
+using NATS.Client.Core;
 
-await using var nats = new NatsClient();
+await using var connection = new NatsConnection();
 
 // Publish — any AisMessageBase is written as polymorphic UTF-8 JSON.
-await nats.PublishAsync("ais.stream", message, serializer: AisMessageNatsSerializer.Default);
+await connection.PublishAsync("ais.stream", message, serializer: AisMessageNatsSerializer.Default);
 
 // Subscribe — the concrete type is reconstructed from the $type discriminator.
-await foreach (var msg in nats.SubscribeAsync<AisMessageBase>(
+await foreach (var msg in connection.SubscribeAsync<AisMessageBase>(
     "ais.stream", serializer: AisMessageNatsSerializer.Default))
 {
     if (msg.Data is AisMessageType18 positionReport)
@@ -35,6 +35,8 @@ await foreach (var msg in nats.SubscribeAsync<AisMessageBase>(
     }
 }
 ```
+
+> Examples use `NatsConnection` from `NATS.Client.Core` (this package's dependency). The higher-level `NatsClient` from the `NATS.Net` meta-package exposes the same `PublishAsync`/`SubscribeAsync` if you prefer it.
 
 ### Default serializer for a connection
 
