@@ -2,14 +2,12 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Ais.Net.Models.Json.Nats;
 
 using System;
 
-using Ais.Net.Models;
-
 using NATS.Client.Core;
 
+namespace Ais.Net.Models.Json.Nats;
 /// <summary>
 /// An <see cref="INatsSerializerRegistry"/> that provides <see cref="AisMessageNatsSerializer"/> for
 /// <see cref="AisMessageBase"/>. Assign it to <c>NatsOpts.SerializerRegistry</c> so an AIS-broadcast
