@@ -63,3 +63,7 @@ dotnet build Solutions/Ais.Net.Models.Json.Nats.slnx -c Release
 ## Licenses
 
 Licensed under the [Apache 2.0 License](./LICENSE).
+
+
+[![OpenChain](https://imm.endjin.com/api/imm/github/ais-dotnet/Ais.Net.Models.Json.Nats/rule/66efac1a-662c-40cf-b4ec-8b34c29e9fd7?cache=false)](https://imm.endjin.com/api/imm/github/ais-dotnet/Ais.Net.Models.Json.Nats/rule/66efac1a-662c-40cf-b4ec-8b34c29e9fd7?cache=false)
+
