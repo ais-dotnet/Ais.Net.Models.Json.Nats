@@ -1,8 +1,6 @@
-namespace Ais.Net.Models.Json.Nats.Specs;
-
-using Ais.Net.Models;
 using Ais.Net.Models.Abstractions;
 
+namespace Ais.Net.Models.Json.Nats.Specs;
 /// <summary>
 /// Shared, fully-populated sample messages for one instance of each of the seven AIS message types,
 /// used by both the unit tests and the container integration test.

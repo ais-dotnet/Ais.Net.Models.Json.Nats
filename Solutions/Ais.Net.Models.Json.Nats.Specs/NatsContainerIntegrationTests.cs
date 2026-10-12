@@ -1,11 +1,8 @@
-namespace Ais.Net.Models.Json.Nats.Specs;
 
 using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-
-using Ais.Net.Models;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -15,6 +12,7 @@ using Shouldly;
 
 using Testcontainers.Nats;
 
+namespace Ais.Net.Models.Json.Nats.Specs;
 /// <summary>
 /// End-to-end tests that publish and subscribe through a real NATS server running in a container,
 /// proving the serializer works over the actual wire (connection framing, buffer handling and the

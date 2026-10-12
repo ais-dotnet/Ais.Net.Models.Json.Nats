@@ -1,14 +1,9 @@
-namespace Ais.Net.Models.Json.Nats.Specs;
 
 using System;
 using System.Buffers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-
-using Ais.Net.Models;
-using Ais.Net.Models.Abstractions;
-using Ais.Net.Models.Json;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -18,6 +13,7 @@ using NSubstitute;
 
 using Shouldly;
 
+namespace Ais.Net.Models.Json.Nats.Specs;
 [TestClass]
 public class AisMessageNatsSerializerTests
 {

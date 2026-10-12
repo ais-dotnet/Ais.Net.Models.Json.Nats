@@ -2,15 +2,12 @@
 // Copyright (c) Endjin Limited. All rights reserved.
 // </copyright>
 
-namespace Ais.Net.Models.Json.Nats;
 
 using System.Buffers;
 
-using Ais.Net.Models;
-using Ais.Net.Models.Json;
-
 using NATS.Client.Core;
 
+namespace Ais.Net.Models.Json.Nats;
 /// <summary>
 /// A NATS.Net serializer and deserializer for AIS messages that delegates to the low-allocation,
 /// polymorphic <see cref="AisMessageJson"/> serializer.
