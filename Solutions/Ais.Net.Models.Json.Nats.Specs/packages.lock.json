@@ -93,8 +93,8 @@
       },
       "Ais.Net.Models": {
         "type": "Transitive",
-        "resolved": "1.0.1",
-        "contentHash": "irKtFX2z8wDJB7IKVmeztgyIArczoanL1FLI+zLpUGgWDoutiPAX73V7IJrfMJ96BAeuIkIQUHJFW3ifS26Wlw==",
+        "resolved": "1.0.2",
+        "contentHash": "/pC6UVuF6bzPkB8wyZJ64QkpjTGt+zn3ASLSeRzvhF/H7bJRZtXc65KkX2/Y2p2/VtDK81jafZM8P/qYSrKeEw==",
         "dependencies": {
           "Ais.Net": "0.4.2"
         }
@@ -325,17 +325,17 @@
       "ais.net.models.json.nats": {
         "type": "Project",
         "dependencies": {
-          "Ais.Net.Models.Json": "[1.0.2, )",
+          "Ais.Net.Models.Json": "[1.0.3, )",
           "NATS.Client.Core": "[3.3.0, )"
         }
       },
       "Ais.Net.Models.Json": {
         "type": "CentralTransitive",
-        "requested": "[1.0.2, )",
-        "resolved": "1.0.2",
-        "contentHash": "3s6BHceuopp4PKntce5BTdmsP3zEejqktcMkCLXlKb3FpPl1lZjfVq+XE61J4cpa3Hm9P7wFh3rGJBYUicjerw==",
+        "requested": "[1.0.3, )",
+        "resolved": "1.0.3",
+        "contentHash": "oBOLcv+JKCrfZECvvl5afsByIeYWX5yoTcQFX309KAOBAv5FoyU2JU96fFBmy+hFwolB4PlISR9B4o+2YmopDA==",
         "dependencies": {
-          "Ais.Net.Models": "1.0.1"
+          "Ais.Net.Models": "1.0.2"
         }
       }
     }
