@@ -5,8 +5,8 @@
   </PropertyGroup>
 
   <ItemGroup Label="Ais.Net.Models.Json.Nats">
-    <PackageVersion Include="Ais.Net.Models.Json" Version="1.0.3" />
-    <PackageVersion Include="NATS.Client.Core" Version="3.3.0" />
+    <PackageVersion Include="Ais.Net.Models.Json" Version="1.0.4" />
+    <PackageVersion Include="NATS.Client.Core" Version="3.3.2" />
   </ItemGroup>
 
   <ItemGroup Label="Ais.Net.Models.Json.Nats.Specs">
